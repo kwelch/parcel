@@ -8,7 +8,15 @@ const https = require('https');
 const getPort = require('get-port');
 const sinon = require('sinon');
 
+let b;
+
 describe('server', function() {
+  afterEach(async () => {
+    if (b.watcher) {
+      await b.watcher.unsubscribe();
+    }
+  });
+
   function get(file, port, client = http) {
     return new Promise((resolve, reject) => {
       client.get(
@@ -36,7 +44,7 @@ describe('server', function() {
 
   it('should serve files', async function() {
     let port = await getPort();
-    let b = bundler(path.join(__dirname, '/integration/commonjs/index.js'), {
+    b = bundler(path.join(__dirname, '/integration/commonjs/index.js'), {
       serve: {
         https: false,
         port: port,
@@ -58,7 +66,7 @@ describe('server', function() {
   // TODO: Implement this once HTMLTransformer is in
   it.skip('should serve a default page if the main bundle is an HTML asset', async function() {
     let port = await getPort();
-    let b = bundler(path.join(__dirname, '/integration/html/index.html'), {
+    b = bundler(path.join(__dirname, '/integration/html/index.html'), {
       serve: {
         https: false,
         port: port,
@@ -84,7 +92,7 @@ describe('server', function() {
 
   it('should serve a 404 if the file does not exist', async function() {
     let port = await getPort();
-    let b = bundler(path.join(__dirname, '/integration/commonjs/index.js'), {
+    b = bundler(path.join(__dirname, '/integration/commonjs/index.js'), {
       serve: {
         https: false,
         port: port,
@@ -111,7 +119,7 @@ describe('server', function() {
     await fs.ncp(path.join(__dirname, '/integration/commonjs'), inputDir);
     let entry = path.join(inputDir, 'index.js');
 
-    let b = bundler(entry, {
+    b = bundler(entry, {
       serve: {
         https: false,
         port: port,
@@ -143,7 +151,7 @@ describe('server', function() {
 
   it('should support HTTPS', async function() {
     let port = await getPort();
-    let b = bundler(path.join(__dirname, '/integration/commonjs/index.js'), {
+    b = bundler(path.join(__dirname, '/integration/commonjs/index.js'), {
       serve: {
         https: true,
         port: port,
@@ -163,7 +171,7 @@ describe('server', function() {
 
   it('should support HTTPS via custom certificate', async function() {
     let port = await getPort();
-    let b = bundler(path.join(__dirname, '/integration/commonjs/index.js'), {
+    b = bundler(path.join(__dirname, '/integration/commonjs/index.js'), {
       serve: {
         https: {
           key: path.join(__dirname, '/integration/https/private.pem'),
@@ -186,7 +194,7 @@ describe('server', function() {
 
   it('should support setting a public url', async function() {
     let port = await getPort();
-    let b = bundler(path.join(__dirname, '/integration/commonjs/index.js'), {
+    b = bundler(path.join(__dirname, '/integration/commonjs/index.js'), {
       serve: {
         https: false,
         port: port,
@@ -208,7 +216,7 @@ describe('server', function() {
   // TODO: Update this when static assets are a thing in JS
   it.skip('should serve static assets as well as html', async function() {
     let port = await getPort();
-    let b = bundler(path.join(__dirname, '/integration/html/index.html'), {
+    b = bundler(path.join(__dirname, '/integration/html/index.html'), {
       serve: {
         https: false,
         port: port,
@@ -235,7 +243,7 @@ describe('server', function() {
 
   it.skip('should work with query parameters that contain a dot', async function() {
     let port = await getPort();
-    let b = bundler(path.join(__dirname, '/integration/commonjs/index.js'), {
+    b = bundler(path.join(__dirname, '/integration/commonjs/index.js'), {
       serve: {
         https: false,
         port: port,
@@ -254,7 +262,7 @@ describe('server', function() {
   });
 
   it.skip('should work with paths that contain a dot', async function() {
-    let b = bundler(path.join(__dirname, '/integration/html/index.html'), {
+    b = bundler(path.join(__dirname, '/integration/html/index.html'), {
       publicUrl: '/'
     });
     await b.serve(0);
@@ -267,7 +275,7 @@ describe('server', function() {
   });
 
   it.skip('should not log dev server access for log level <= 3', async function() {
-    let b = bundler(path.join(__dirname, '/integration/html/index.html'), {
+    b = bundler(path.join(__dirname, '/integration/html/index.html'), {
       publicUrl: '/'
     });
     await b.serve(0);
@@ -281,7 +289,7 @@ describe('server', function() {
   });
 
   it.skip('should log dev server access for log level > 3', async function() {
-    let b = bundler(path.join(__dirname, '/integration/html/index.html'), {
+    b = bundler(path.join(__dirname, '/integration/html/index.html'), {
       publicUrl: '/'
     });
     await b.serve(0);

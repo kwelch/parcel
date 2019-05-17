@@ -29,7 +29,8 @@ export default class Parcel {
   #reporterRunner; // ReporterRunner
   #resolvedOptions; // ?ParcelOptions
   #runPackage; // (bundle: Bundle, bundleGraph: InternalBundleGraph) => Promise<Stats>;
-  #watcher;
+  // TODO: this should be private once we have Parcel.watch function
+  watcher;
 
   constructor(options: InitialParcelOptions) {
     this.#initialOptions = clone(options);
@@ -111,7 +112,7 @@ export default class Parcel {
       );
       let vcsDirs = ['.git', '.hg'].map(dir => path.join(projectRoot, dir));
       let ignore = [cacheDir, ...targetDirs, ...vcsDirs];
-      this.#watcher = await watcher.subscribe(
+      this.watcher = await watcher.subscribe(
         projectRoot,
         (err, events) => {
           if (err) {
