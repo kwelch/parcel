@@ -128,7 +128,6 @@ export type InitialParcelOptions = {|
   env?: {[string]: ?string},
   targets?: ?Array<string | Target>,
 
-  watch?: boolean,
   cache?: boolean,
   cacheDir?: FilePath,
   killWorkers?: boolean,

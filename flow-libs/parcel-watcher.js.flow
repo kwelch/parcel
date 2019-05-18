@@ -27,7 +27,7 @@ declare module '@parcel/watcher' {
       dir: FilePath,
       fn: (err: Error, events: Array<Event>) => mixed,
       opts: Options
-    ): AsyncSubscription,
+    ): Promise<AsyncSubscription>,
     unsubscribe(
       dir: FilePath,
       fn: (err: Error, events: Array<Event>) => mixed,
